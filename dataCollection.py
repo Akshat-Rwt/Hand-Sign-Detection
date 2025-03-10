@@ -37,8 +37,25 @@ while True:
 
             imgResize = cv2.resize(imgCrop , (wCal , imgSize))
             imgResizeShape = imgResize.shape
-            imgWhite[0:imgResizeShape[0], 0:imgResizeShape[1]] = imgResize
 
+            # Now we can make the crop image is in the centre when it overlay on white image
+            # Width Gap
+            wGap = math.ceil((imgSize-wCal)/2)
+            imgWhite[:,  wGap:wCal+wGap] = imgResize
+
+        # Now we can make it for the width
+        else:
+            k = imgSize / w  # Now Width is 300
+            # Height Calculated
+            hCal = math.ceil(k * h)  # Ceil is used to rounds a number up to the nearest integer
+
+            imgResize = cv2.resize(imgCrop, (imgSize, hCal))
+            imgResizeShape = imgResize.shape
+
+            # Now we can make the crop image is in the centre when it overlay on white image
+            # Height Gap
+            hGap = math.ceil((imgSize - hCal) / 2)
+            imgWhite[hGap:hCal + hGap, :  ] = imgResize
 
         cv2.imshow("ImageCrop", imgCrop)
         cv2.imshow("ImageWhite", imgWhite)
