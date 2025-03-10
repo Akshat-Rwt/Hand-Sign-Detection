@@ -2,12 +2,17 @@ import cv2
 from cvzone.HandTrackingModule import HandDetector
 import numpy as np
 import math
+import time
 
 cap = cv2.VideoCapture(0)
 detector = HandDetector(maxHands=1) # This is the function in cvzome for detecting the hands. Only maxHands 1
 
 offset = 20 # Increase the Frame
 imgSize = 300
+
+# Save the Images
+folder = "Data/A"
+counter = 0 #how many images we save in this
 
 while True:
     success  ,img = cap.read()
@@ -61,5 +66,8 @@ while True:
         cv2.imshow("ImageWhite", imgWhite)
 
     cv2.imshow("Image", img)
-    cv2.waitKey(1)
-
+    key = cv2.waitKey(1)
+    if key == ord("s"): # Use when press the s it can save the image.
+        counter += 1
+        cv2.imwrite(f'{folder}/Image_{time.time()}.jpg',imgWhite) # time.time will give you a unique value each and everytime.
+        print(counter)
