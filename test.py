@@ -19,7 +19,8 @@ counter = 0 #how many images we save in this
 labels = ["A", "B", "C"]
 while True:
     success  ,img = cap.read()
-    hands , img = detector.findHands(img) # Find the Hands
+    imgOutput = img.copy()
+    hands, img = detector.findHands(img) # Find the Hands
 
     # Crop the image
     if hands:
@@ -50,7 +51,7 @@ while True:
             # Width Gap
             wGap = math.ceil((imgSize-wCal)/2)
             imgWhite[:,  wGap:wCal+wGap] = imgResize
-            prediction , index = classifier.getPrediction(img)
+            prediction , index = classifier.getPrediction(imgWhite ,draw = False)
             print(prediction , index)
 
         # Now we can make it for the width
@@ -66,9 +67,13 @@ while True:
             # Height Gap
             hGap = math.ceil((imgSize - hCal) / 2)
             imgWhite[hGap:hCal + hGap, :  ] = imgResize
+            prediction, index = classifier.getPrediction(imgWhite , draw = False)
 
+        cv2.rectangle(imgOutput, (x - offset, y - offset-50), (x - offset + 100,y - offset-50+50), (255, 0, 255),cv2.FILLED)
+        cv2.putText(imgOutput, labels[index] , (x,y-26) , cv2.FONT_HERSHEY_PLAIN,1.7,(255,255,255),2,)
+        cv2.rectangle(imgOutput,(x-offset,y-offset), (x+w+offset,y+h+offset) , (255,0,255), 4)
         cv2.imshow("ImageCrop", imgCrop)
         cv2.imshow("ImageWhite", imgWhite)
 
-    cv2.imshow("Image", img)
+    cv2.imshow("Image", imgOutput)
     cv2.waitKey(1)
